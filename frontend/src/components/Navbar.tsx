@@ -12,13 +12,11 @@ export function Navbar() {
     try {
       const response = await axios.get('https://fakeonlineshop-auth.auth.us-east-1.amazoncognito.com/oauth2/authorize', {
         params: {
-          response_type: 'code',
-          client_id: 'ad398u21ijw3s9w3939',
-          redirect_uri: 'https://YOUR_APP/redirect_uri',
+          response_type: 'token',
+          client_id: '6ht9pj7151k1gqq5vfi6jn1poa',
+          redirect_uri: 'http://online-shop-karvin.s3-website.us-east-2.amazonaws.com/',
           state: 'STATE',
           scope: 'aws.cognito.signin.user.admin',
-          code_challenge_method: 'S256',
-          code_challenge: 'CODE_CHALLENGE'
         }
       });
 
