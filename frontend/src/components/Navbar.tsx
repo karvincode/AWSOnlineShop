@@ -6,15 +6,16 @@ import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 
 export function Navbar() {
+
   const [isPositiveResponse, setIsPositiveResponse] = useState(false);
   useEffect(() => {
   const makeRequest = async () => {
     try {
-      const response = await axios.get('https://fakeonlineshop-auth.auth.us-east-1.amazoncognito.com/oauth2/authorize', {
+      const response = await axios.get('https://fakeonlineshop.auth.us-east-1.amazoncognito.com/oauth2/authorize', {
         params: {
           response_type: 'token',
           client_id: '27shthi50b751l8298j2gcdo47',
-          redirect_uri: 'https://www.karvinfakeonlineshop.net/',
+          redirect_uri: 'http://localhost:5173/',
           state: 'STATE',
           scope: 'aws.cognito.signin.user.admin',
         }
