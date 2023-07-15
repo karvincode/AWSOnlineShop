@@ -6,16 +6,17 @@ import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 
 export function Navbar() {
-
   const [isPositiveResponse, setIsPositiveResponse] = useState(false);
   useEffect(() => {
   const makeRequest = async () => {
     try {
+      //http://localhost:5173/
+      //https://www.karvinfakeonlineshop.net/
       const response = await axios.get('https://fakeonlineshop.auth.us-east-1.amazoncognito.com/oauth2/authorize', {
         params: {
           response_type: 'token',
           client_id: '27shthi50b751l8298j2gcdo47',
-          redirect_uri: 'http://localhost:5173/',
+          redirect_uri: 'http://localhost:5173',
           state: 'STATE',
           scope: 'aws.cognito.signin.user.admin',
         }
@@ -35,14 +36,32 @@ export function Navbar() {
   };
     makeRequest();
   },[]);
-
-  const { isLoggedIn, logout } = useContext(AuthContext);
+  
   const navigate = useNavigate();
-
-  const handleLogout = () => {
-    // Call the logout function
-    logout();
-    navigate('/');
+  const logout = () => { 
+    const base_url="https://fakeonlineshop.auth.us-east-1.amazoncognito.com"
+    const path="logout"
+    const client_id="27shthi50b751l8298j2gcdo47"
+    const logout_uri="https://karvinfakeonlineshop.net"
+    const url = new URL(`${base_url}/${path}`)
+    url.searchParams.append("client_id", client_id)
+    url.searchParams.append("logout_uri", logout_uri)
+    navigate(url.href)
+  }
+  const loginOrRegister = () => { 
+    const base_url="https://fakeonlineshop.auth.us-east-1.amazoncognito.com"
+    const path="login"
+    const client_id="27shthi50b751l8298j2gcdo47"
+    const response_type="code"
+    const scope= "email+openid"
+    const redirect_uri="https://karvinfakeonlineshop.net"
+    const url = new URL(`${base_url}/${path}`)
+    url.searchParams.append("client_id", client_id)
+    url.searchParams.append("response_type", response_type)
+    url.searchParams.append("scope", scope)
+    url.searchParams.append("redirect_uri", redirect_uri)
+    console.log(url.href)
+    navigate(url.href)
   }
   const { openCart, cartQuantity } = useShoppingCart()
   return (
@@ -92,7 +111,7 @@ export function Navbar() {
         )}
         {isPositiveResponse ? (
           <>
-          <a className="mx-3 nav-link" href="https://fakeonlineshop-auth.auth.us-east-1.amazoncognito.com/logout?client_id=6ht9pj7151k1gqq5vfi6jn1poa&logout_uri=https%3A%2F%2Fonline-shop-karvin.s3-website.us-east-2.amazonaws.com%2F">
+          <a className="mx-3 nav-link" onClick={logout}>
             Logout
           </a>
           <Nav.Link to="/Profile" as={NavLink} className="mx-3">
@@ -100,7 +119,7 @@ export function Navbar() {
           </Nav.Link>
           </>
         ) : (<>
-          <a className="mx-3 nav-link" href="https://fakeonlineshop-auth.auth.us-east-1.amazoncognito.com/login?client_id=6ht9pj7151k1gqq5vfi6jn1poa&response_type=code&scope=email+openid&redirect_uri=https%3A%2F%2Fonline-shop-karvin.s3-website.us-east-2.amazonaws.com%2F">
+          <a className="mx-3 nav-link" onClick={loginOrRegister} >
             Login or Register
           </a>
         </>
