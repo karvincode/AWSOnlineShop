@@ -1,69 +1,52 @@
 import { Button, Container, Nav, Navbar as NavbarBs } from "react-bootstrap"
-import { NavLink, useNavigate } from "react-router-dom"
+import { NavLink, useNavigate, useSearchParams } from "react-router-dom"
 import { useShoppingCart } from "../context/ShoppingCartContext"
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 
 export function Navbar() {
-  const [isPositiveResponse, setIsPositiveResponse] = useState(false);
-  useEffect(() => {
-  const makeRequest = async () => {
-    try {
-      //http://localhost:5173/
-      //https://www.karvinfakeonlineshop.net/
-      const response = await axios.get('https://fakeonlineshop.auth.us-east-1.amazoncognito.com/oauth2/authorize', {
-        params: {
-          response_type: 'token',
-          client_id: '27shthi50b751l8298j2gcdo47',
-          redirect_uri: 'http://localhost:5173',
-          state: 'STATE',
-          scope: 'aws.cognito.signin.user.admin',
-        }
-      });
-
-      // Check if the response is positive and update the state variable accordingly
-      if (response.status === 200) {
-        setIsPositiveResponse(true);
-      } else {
-        setIsPositiveResponse(false);
-      }
-    } catch (error) {
-      // Handle any error that occurred during the request
-      console.error('Error:', error);
-      setIsPositiveResponse(false);
-    }
-  };
-    makeRequest();
-  },[]);
-  
-  const navigate = useNavigate();
-  const logout = () => { 
-    const base_url="https://fakeonlineshop.auth.us-east-1.amazoncognito.com"
-    const path="logout"
-    const client_id="27shthi50b751l8298j2gcdo47"
-    const logout_uri="https://karvinfakeonlineshop.net"
-    const url = new URL(`${base_url}/${path}`)
-    url.searchParams.append("client_id", client_id)
-    url.searchParams.append("logout_uri", logout_uri)
-    navigate(url.href)
-  }
-  const loginOrRegister = () => { 
-    const base_url="https://fakeonlineshop.auth.us-east-1.amazoncognito.com"
-    const path="login"
-    const client_id="27shthi50b751l8298j2gcdo47"
-    const response_type="code"
-    const scope= "email+openid"
-    const redirect_uri="https://karvinfakeonlineshop.net"
-    const url = new URL(`${base_url}/${path}`)
-    url.searchParams.append("client_id", client_id)
-    url.searchParams.append("response_type", response_type)
-    url.searchParams.append("scope", scope)
-    url.searchParams.append("redirect_uri", redirect_uri)
-    console.log(url.href)
-    navigate(url.href)
-  }
   const { openCart, cartQuantity } = useShoppingCart()
+  const navigate = useNavigate();
+  const [searchParams, _] = useSearchParams()
+  const code = searchParams.get("code")
+  // state variables
+  const [loginUrl, setLoginUrl] = useState(null)
+  const [logoutUrl, setLogoutUrl] = useState(null)
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // shared variables
+  const base_url = 'https://fakeonlineshop.auth.us-east-1.amazoncognito.com'
+  const client_id = '27shthi50b751l8298j2gcdo47'
+  const client_id = 'code'
+  const redirect_uri = import.meta.env.PROD ?
+    'https://karvinfakeonlineshop.net/' :
+    'http://localhost:5173/'
+  // set logoutUrl
+  useEffect(() => {
+    const url = new URL(`${base_url}/logout`)
+    url.searchParams.append('client_id', client_id)
+    url.searchParams.append('response_type', response_type)
+    url.searchParams.append('redirect_uri', redirect_uri)
+    setLogoutUrl(url.href)
+  }, [])
+  // set loginUrl
+  useEffect(() => {
+    const url = new URL(`${base_url}/login`)
+    url.searchParams.append('client_id', client_id)
+    url.searchParams.append('response_type', response_type)
+    url.searchParams.append('redirect_uri', redirect_uri)
+    setLoginUrl(url.href)
+  }, [])
+  // use code
+  useEffect(() => {
+    if (!code) {
+      console.log('there\'s no code, which means the user isn\'t logged in')
+      setIsLoggedIn(false)
+      return
+    }
+    setIsLoggedIn(true)
+    console.log('there is a code, which means the user is logged in. exchange the code for a token. exchange the token for user data like username and password.', code)
+  }, [code])
   return (
     <NavbarBs sticky="top" className="bg-white shadow-sm mb-3">
       <Container>
@@ -92,7 +75,6 @@ export function Navbar() {
             >
               <path d="M96 0C107.5 0 117.4 8.19 119.6 19.51L121.1 32H541.8C562.1 32 578.3 52.25 572.6 72.66L518.6 264.7C514.7 278.5 502.1 288 487.8 288H170.7L179.9 336H488C501.3 336 512 346.7 512 360C512 373.3 501.3 384 488 384H159.1C148.5 384 138.6 375.8 136.4 364.5L76.14 48H24C10.75 48 0 37.25 0 24C0 10.75 10.75 0 24 0H96zM128 464C128 437.5 149.5 416 176 416C202.5 416 224 437.5 224 464C224 490.5 202.5 512 176 512C149.5 512 128 490.5 128 464zM512 464C512 490.5 490.5 512 464 512C437.5 512 416 490.5 416 464C416 437.5 437.5 416 464 416C490.5 416 512 437.5 512 464z" />
             </svg>
-
             <div
               className="rounded-circle bg-danger d-flex justify-content-center align-items-center"
               style={{
@@ -109,22 +91,22 @@ export function Navbar() {
             </div>
           </Button>
         )}
-        {isPositiveResponse ? (
+        {isLoggedIn ? (
           <>
-          <a className="mx-3 nav-link" onClick={logout}>
-            Logout
-          </a>
-          <Nav.Link to="/Profile" as={NavLink} className="mx-3">
-            Profile
-          </Nav.Link>
+            <a className="mx-3 nav-link" href={logoutUrl}>
+              logout
+            </a>
+            <Nav.Link to="/Profile" as={NavLink} className="mx-3">
+              Profile
+            </Nav.Link>
           </>
-        ) : (<>
-          <a className="mx-3 nav-link" onClick={loginOrRegister} >
-            Login or Register
-          </a>
-        </>
+        ) : (
+          <>
+            <a className="mx-3 nav-link" href={loginUrl} >
+              Login or Register
+            </a>
+          </>
         )}
-
       </Container>
     </NavbarBs>
   )
