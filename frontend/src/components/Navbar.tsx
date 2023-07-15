@@ -17,7 +17,7 @@ export function Navbar() {
   // shared variables
   const base_url = 'https://fakeonlineshop.auth.us-east-1.amazoncognito.com'
   const client_id = '27shthi50b751l8298j2gcdo47'
-  const client_id = 'code'
+  const response_type = 'code'
   const redirect_uri = import.meta.env.PROD ?
     'https://karvinfakeonlineshop.net/' :
     'http://localhost:5173/'
