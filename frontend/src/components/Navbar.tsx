@@ -13,8 +13,8 @@ export function Navbar() {
       const response = await axios.get('https://fakeonlineshop-auth.auth.us-east-1.amazoncognito.com/oauth2/authorize', {
         params: {
           response_type: 'token',
-          client_id: '6ht9pj7151k1gqq5vfi6jn1poa',
-          redirect_uri: 'http://online-shop-karvin.s3-website.us-east-2.amazonaws.com/',
+          client_id: '27shthi50b751l8298j2gcdo47',
+          redirect_uri: 'https://www.karvinfakeonlineshop.net/',
           state: 'STATE',
           scope: 'aws.cognito.signin.user.admin',
         }
