@@ -11,8 +11,8 @@ export function Navbar() {
   const [searchParams, _] = useSearchParams()
   const code = searchParams.get("code")
   // state variables
-  const [loginUrl, setLoginUrl] = useState(null)
-  const [logoutUrl, setLogoutUrl] = useState(null)
+  const [loginUrl, setLoginUrl] = useState<string | null>(null)
+  const [logoutUrl, setLogoutUrl] = useState<string | null>(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   // shared variables
   const base_url = 'https://fakeonlineshop.auth.us-east-1.amazoncognito.com'
@@ -93,8 +93,8 @@ export function Navbar() {
         )}
         {isLoggedIn ? (
           <>
-            <a className="mx-3 nav-link" href={logoutUrl}>
-              logout
+            <a className="mx-3 nav-link" href={logoutUrl || ''}>
+              Logout
             </a>
             <Nav.Link to="/Profile" as={NavLink} className="mx-3">
               Profile
@@ -102,7 +102,7 @@ export function Navbar() {
           </>
         ) : (
           <>
-            <a className="mx-3 nav-link" href={loginUrl} >
+            <a className="mx-3 nav-link" href={loginUrl || ''} >
               Login or Register
             </a>
           </>

@@ -55,7 +55,7 @@ export function Security() {
           <Button variant="primary" type="submit">
             Request Password Reset
           </Button>
-          <p>I removed the third party support for this since I was receiving scam emails. The theory behind the code shoudld still work.</p>
+          <p>I removed the third party support for this since I was receiving scam emails. The theory behind the code should still work it just is not connecting to a mailing provider</p>
         </div>
       </Form>
     </>
