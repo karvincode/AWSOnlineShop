@@ -15,12 +15,12 @@ export function Navbar() {
   const [logoutUrl, setLogoutUrl] = useState<string | null>(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   // shared variables
-  const base_url = 'https://fakeonlineshop.auth.us-east-1.amazoncognito.com'
+  const base_url = 'https://fakeonlineshop.auth.us-east-1.amazoncognito.com/'
   const client_id = '27shthi50b751l8298j2gcdo47'
   const response_type = 'code'
   const redirect_uri = import.meta.env.PROD ?
     'https://karvinfakeonlineshop.net/' :
-    'http://localhost:5173/'
+    'http://localhost:5173/' 
   // set logoutUrl
   useEffect(() => {
     const url = new URL(`${base_url}/logout`)
@@ -38,6 +38,7 @@ export function Navbar() {
     setLoginUrl(url.href)
   }, [])
   // use code
+  console.log(code)
   useEffect(() => {
     if (!code) {
       console.log('there\'s no code, which means the user isn\'t logged in')
