@@ -19,7 +19,7 @@ export function Navbar() {
   const client_id = '27shthi50b751l8298j2gcdo47'
   const response_type = 'code'
   const redirect_uri = import.meta.env.PROD ?
-    'https://karvinfakeonlineshop.net/' :
+    'https://www.karvinfakeonlineshop.net/' :
     'http://localhost:5173/' 
   // set logoutUrl
   useEffect(() => {
